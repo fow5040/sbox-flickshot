@@ -47,6 +47,9 @@ public partial class WeaponBase
     /// <summary>Path to the hands model (will be bonemerged with viewmodel, leave empty to disable)</summary>
     public virtual string HandsModelPath => "";
 
+    /// <summary>Path to the lighter model (will be bonemerged with viewmodel)</summary>
+    public virtual string LighterModelPath => "weapons/lighter/lighter.vmdl";
+
     /// <summary>Path to the view model</summary>
     public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
 
@@ -139,6 +142,9 @@ public partial class WeaponBase
 
     /// <summary>Model of the hands</summary>
     public BaseViewModel HandsModel;
+
+    /// <summary>Model of the lighter</summary>
+    public BaseViewModel LighterModel;
 
     /// <summary>Initial stats (not actual)</summary>
     public StatModifier InitialStats { get; protected set; }

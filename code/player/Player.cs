@@ -1,6 +1,7 @@
 using Sandbox;
 using SWB_Base;
 using SWB_Player;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
@@ -13,7 +14,8 @@ public partial class Player : PlayerBase
 
     public ClothingContainer Clothing = new();
 	public bool Flicked { get; set; } = false;
-    public Particles LighterParticle {get; set;} = null;
+    TimeSince timeSinceFlick;
+    public List<Particles> LighterParticles {get; set;} = new List<Particles>();
 
     public Player() : base()
     {
@@ -92,21 +94,51 @@ public partial class Player : PlayerBase
             }
         }
 
-        if (Input.Pressed(InputButtonHelper.Flashlight)) {
-            var LighterEntity = this;
-            if (Flicked) {
-                this.PlaySound( "sounds/flick_close.sound" );
-                if (LighterParticle != null) {
-                    LighterParticle.Destroy(true);
-                }
-            } else {
+        if (this.ActiveChild is WeaponBase) {
+            bool flicked = Input.Pressed(InputButtonHelper.Flashlight);
+            bool isFlicking = Input.Down(InputButtonHelper.Flashlight);
+            bool flickReleased = Input.Released(InputButtonHelper.Flashlight);
+
+            var WeaponEntity = this.ActiveChild as WeaponBase;
+            var LighterEntity = WeaponEntity.LighterModel;
+
+            if (flicked) {
+                timeSinceFlick = 0;
                 this.PlaySound( "sounds/flick_open.sound" );
-                //Particles.Create( "particles/testy.vpcf", this, "head");
-                LighterParticle = Particles.Create( "particles/lighter_particle.vpcf", LighterEntity, "eyes");
-                // LighterParticle = Particles.Create( "particles/emitslight.vpcf", LighterEntity, "head");
-                //LighterParticle = Particles.Create( "particles/example/int_from_model_example/int_from_model_example.vpcf", LighterEntity, "head");
+                Particles.Create("particles/lighter_flint.vpcf", LighterEntity, "flint");
             }
-            Flicked = !Flicked;
+
+            if (isFlicking) {
+                if (timeSinceFlick > .15 && LighterParticles.Count == 0) {
+                    var LighterParticle1 = Particles.Create("particles/lighter_particle.vpcf", LighterEntity, "flame");
+                    LighterParticles.Add(LighterParticle1);
+                    var LighterParticle3 = Particles.Create("particles/lighter_fire.vpcf", LighterEntity, "flame");
+                    LighterParticles.Add(LighterParticle3);
+                }
+            }
+
+            if (flickReleased && LighterParticles.Count > 0) {
+                LighterParticles.ForEach( lp => {
+                    if (lp != null) lp.Destroy(false);
+                });
+                LighterParticles.Clear();
+                this.PlaySound( "sounds/flick_close.sound" );
+            }
+
+            // if (Flicked) {
+            //     LighterParticles.ForEach( lp => {
+            //         if (lp != null) lp.Destroy(false);
+            //     });
+            // } else {
+            //     // Particles.Create( "particles/testy.vpcf", this, "head");
+            //     // var LighterParticle1 = Particles.Create("particles/lighter_particle.vpcf", LighterEntity, "flame");
+            //     // LighterParticles.Add(LighterParticle1);
+            //     // // LighterParticle2 = Particles.Create( "particles/emitslight.vpcf", LighterEntity, "head");
+            //     // // var LighterParticle3 = Particles.Create( "particles/example/int_from_model_example/int_from_model_example.vpcf", LighterEntity, "flame");
+            //     // var LighterParticle3 = Particles.Create("particles/lighter_fire.vpcf", LighterEntity, "flame");
+            //     // LighterParticles.Add(LighterParticle3);
+            //     Particles.Create("particles/lighter_flint.vpcf", LighterEntity, "flint");
+            // }
         }
 
         SimulateActiveChild(cl, ActiveChild);

@@ -304,6 +304,17 @@ public partial class WeaponBase : CarriableBase
             HandsModel.SetModel(HandsModelPath);
             HandsModel.SetParent(ViewModelEntity, true);
         }
+
+        // Bonemerge hands
+        if (!string.IsNullOrEmpty(LighterModelPath))
+        {
+            LighterModel = new BaseViewModel();
+            LighterModel.Owner = Owner;
+            LighterModel.EnableViewmodelRendering = true;
+            LighterModel.SetModel(LighterModelPath);
+            LighterModel.SetParent(ViewModelEntity, false);
+        }
+
     }
 
     /// <summary>
