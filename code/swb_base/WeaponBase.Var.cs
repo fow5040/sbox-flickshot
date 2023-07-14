@@ -49,6 +49,9 @@ public partial class WeaponBase
 
     /// <summary>Path to the lighter model (will be bonemerged with viewmodel)</summary>
     public virtual string LighterModelPath => "weapons/lighter/lighter.vmdl";
+	public virtual bool Flicked { get; set; } = false;
+    TimeSince timeSinceFlick;
+    public virtual List<Particles> LighterParticles {get; set;} = new List<Particles>();
 
     /// <summary>Path to the view model</summary>
     public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";

@@ -57,10 +57,11 @@ public class DEAGLE : WeaponBase
             },
 
             DryFireSound = "swb_pistol.empty",
-            ShootSound = "deagle.fire",
+            // ShootSound = "deagle.fire",
+            ShootSound = "deagle_fire",
 
             BulletEjectParticle = new("particles/pistol_ejectbrass.vpcf"),
-            //MuzzleFlashParticle = new("particles/swb/muzzle/flash.vpcf", 1.5f, 1f),
+            // MuzzleFlashParticle = new("particles/swb/muzzle/flash.vpcf", 1.5f, 1f),
             MuzzleFlashParticle = new("particles/explosion/barrel_explosion/explosion_flash_02.vpcf", 1.5f, 1f),
             BarrelSmokeParticle = new("particles/swb/muzzle/barrel_smoke.vpcf", 1.5f, 1f),
             BulletTracerParticle = new("particles/swb/tracer/phys_tracer.vpcf"),

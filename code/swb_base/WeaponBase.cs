@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using System.Collections.Generic;
+using Sandbox;
 
 /* 
  * Weapon base for weapons using magazine based reloading 
@@ -8,6 +9,7 @@ namespace SWB_Base;
 
 public partial class WeaponBase : CarriableBase
 {
+    
     public override void Spawn()
     {
         base.Spawn();
@@ -110,6 +112,9 @@ public partial class WeaponBase : CarriableBase
 
     public override void Simulate(IClient client)
     {
+
+        SimulateFlick();
+
         if (IsAnimating) return;
 
         // Handle custom animation actions
@@ -383,6 +388,15 @@ public partial class WeaponBase : CarriableBase
     {
         if (!string.IsNullOrEmpty(sound))
             PlaySound(sound);
+    }
+
+
+    /// <summary>
+    /// Attaches lighter particles to the player
+    /// </summary>
+    [ClientRpc]
+    public virtual void SendWorldLighter()
+    {
     }
 
     /// <summary>

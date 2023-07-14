@@ -13,10 +13,7 @@ public partial class Player : PlayerBase
     TimeSince timeSinceDropped;
 
     public ClothingContainer Clothing = new();
-	public bool Flicked { get; set; } = false;
-    TimeSince timeSinceFlick;
-    public List<Particles> LighterParticles {get; set;} = new List<Particles>();
-    
+
     public Player() : base()
     {
         //Inventory = new ExampleInventory(this);
@@ -92,39 +89,6 @@ public partial class Player : PlayerBase
                 timeSinceDropped = 0;
                 SwitchToBestWeapon();
             }
-        }
-
-        if (this.ActiveChild is WeaponBase) {
-            bool flicked = Input.Pressed(InputButtonHelper.Flashlight);
-            bool isFlicking = Input.Down(InputButtonHelper.Flashlight);
-            bool flickReleased = Input.Released(InputButtonHelper.Flashlight);
-
-            var WeaponEntity = this.ActiveChild as WeaponBase;
-            var LighterEntity = WeaponEntity.LighterModel;
-
-            if (flicked) {
-                timeSinceFlick = 0;
-                this.PlaySound( "sounds/flick_open.sound" );
-                Particles.Create("particles/lighter_flint.vpcf", LighterEntity, "flint");
-            }
-
-            if (isFlicking) {
-                if (timeSinceFlick > .15 && LighterParticles.Count == 0) {
-                    var LighterParticle1 = Particles.Create("particles/lighter_particle.vpcf", LighterEntity, "flame");
-                    LighterParticles.Add(LighterParticle1);
-                    var LighterParticle3 = Particles.Create("particles/lighter_fire.vpcf", LighterEntity, "flame");
-                    LighterParticles.Add(LighterParticle3);
-                }
-            }
-
-            if (flickReleased && LighterParticles.Count > 0) {
-                LighterParticles.ForEach( lp => {
-                    if (lp != null) lp.Destroy(false);
-                });
-                LighterParticles.Clear();
-                this.PlaySound( "sounds/flick_close.sound" );
-            }
-
         }
 
         SimulateActiveChild(cl, ActiveChild);

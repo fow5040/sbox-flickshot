@@ -1,5 +1,6 @@
 ﻿
 using Sandbox;
+using Sandbox.UI;
 using System;
 using System.Linq;
 
@@ -86,18 +87,58 @@ public partial class MyGame : Sandbox.GameManager
 		}
 		if (restarting && roundFinish > 5) {
 			foreach (var player in players) {
-				player.Respawn();
+				RespawnPlayer(player);
 			}
 			ShowRestarting(false);
 			restarting = false;
 		}
 	}
 
+	[Event( "mygame.restart_round" )]
+	public void DoRestartRound()
+	{
+		restarting = true;
+		roundFinish = 0;
+		ShowRestarting(true);
+	}
+
+	[ConCmd.Server( "restart_round" )]
+	public static void RestartRound()
+	{
+		Event.Run("mygame.restart_round");
+	}
+
+	public void RespawnPlayer(SWB_Player.PlayerBase player) {
+		player.Respawn();
+
+		// Get all of the spawnpoints
+		var spawnpoints = Entity.All.OfType<SpawnPoint>();
+
+		// chose a random one
+		var randomSpawnPoint = spawnpoints.OrderBy( x => Guid.NewGuid() ).FirstOrDefault();
+
+		// if it exists, place the pawn there
+		if ( randomSpawnPoint != null )
+		{
+			var tx = randomSpawnPoint.Transform;
+			tx.Position = tx.Position + Vector3.Up * 50.0f; // raise it up
+			player.Transform = tx;
+		}
+	}
+
     [ClientRpc]
 	public void ShowRestarting(bool shouldShow) 
 	{
-		MyGameHud.showRestart = shouldShow;
+		// TODO: FIX THIS!!! bruh
+		if (shouldShow) {
+			// Label label = new Label();
+			// label.Text = "Restarting in 5 seconds...";
+			// // can't do variables with partial classes :/ 
+			// // MyGameHud.showRestart = shouldShow;
+			// MyGameHud.AddChild(label);
+		} else {
+			// MyGameHud.ChildrenOfType<Label>().First<Label>().Delete();
+		}
 	}
-
 }
 
