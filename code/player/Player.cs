@@ -16,7 +16,7 @@ public partial class Player : PlayerBase
 	public bool Flicked { get; set; } = false;
     TimeSince timeSinceFlick;
     public List<Particles> LighterParticles {get; set;} = new List<Particles>();
-
+    
     public Player() : base()
     {
         //Inventory = new ExampleInventory(this);
@@ -125,20 +125,6 @@ public partial class Player : PlayerBase
                 this.PlaySound( "sounds/flick_close.sound" );
             }
 
-            // if (Flicked) {
-            //     LighterParticles.ForEach( lp => {
-            //         if (lp != null) lp.Destroy(false);
-            //     });
-            // } else {
-            //     // Particles.Create( "particles/testy.vpcf", this, "head");
-            //     // var LighterParticle1 = Particles.Create("particles/lighter_particle.vpcf", LighterEntity, "flame");
-            //     // LighterParticles.Add(LighterParticle1);
-            //     // // LighterParticle2 = Particles.Create( "particles/emitslight.vpcf", LighterEntity, "head");
-            //     // // var LighterParticle3 = Particles.Create( "particles/example/int_from_model_example/int_from_model_example.vpcf", LighterEntity, "flame");
-            //     // var LighterParticle3 = Particles.Create("particles/lighter_fire.vpcf", LighterEntity, "flame");
-            //     // LighterParticles.Add(LighterParticle3);
-            //     Particles.Create("particles/lighter_flint.vpcf", LighterEntity, "flint");
-            // }
         }
 
         SimulateActiveChild(cl, ActiveChild);
@@ -169,7 +155,7 @@ public partial class Player : PlayerBase
 
         if (attacker != null && LastDamage.Weapon is WeaponBase weapon && GameManager.Current is MyGame game)
         {
-            //game.UI.AddKillfeedEntry(To.Everyone, attacker.Client.SteamId, attacker.Client.Name, Client.SteamId, Client.Name, weapon.Icon);
+            game.UI.AddKillfeedEntry(To.Everyone, attacker.Client.SteamId, attacker.Client.Name, Client.SteamId, Client.Name, weapon.Icon);
         }
 
         if (ActiveChild is WeaponBase activeWep && activeWep.DropWeaponOnDeath)

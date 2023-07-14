@@ -17,6 +17,10 @@ namespace MyGame;
 /// </summary>
 public partial class MyGame : Sandbox.GameManager
 {
+	public SWB_HUD.HUD UI;
+	private bool restarting;
+	private TimeSince roundFinish;
+	public Hud MyGameHud;
 
 	/// <summary>
 	/// Called when the game is created (on both the server and client)
@@ -25,7 +29,13 @@ public partial class MyGame : Sandbox.GameManager
 	{
 		if ( Game.IsClient )
 		{
-			Game.RootPanel = new Hud();
+			MyGameHud = new Hud();
+			Game.RootPanel = MyGameHud;
+		}
+
+		if ( Game.IsServer)
+		{
+			UI = new SWB_HUD.HUD();
 		}
 	}
 
@@ -58,5 +68,36 @@ public partial class MyGame : Sandbox.GameManager
 		}
 
 	}
+
+	[GameEvent.Tick.Server]
+	public void CheckAlive() 
+	{
+		var players = Sandbox.Entity.All.OfType<SWB_Player.PlayerBase>().ToList();
+		var total = players.Count();
+		var alive = players.Count(p => p.Alive());
+		// Handle solo player case
+		if (total == 1) {
+			alive += 1;
+		}
+		if (alive <= 1  && !restarting) {
+		 	restarting = true;
+		 	roundFinish = 0;
+			ShowRestarting(true);
+		}
+		if (restarting && roundFinish > 5) {
+			foreach (var player in players) {
+				player.Respawn();
+			}
+			ShowRestarting(false);
+			restarting = false;
+		}
+	}
+
+    [ClientRpc]
+	public void ShowRestarting(bool shouldShow) 
+	{
+		MyGameHud.showRestart = shouldShow;
+	}
+
 }
 

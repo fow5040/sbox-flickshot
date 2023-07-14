@@ -91,15 +91,15 @@ public partial class PlayerBase : AnimatedEntity
             ActiveChild = ActiveChildInput;
         }
 
-        if (LifeState == LifeState.Dead)
-        {
-            if (timeSinceDied > 3 && Game.IsServer)
-            {
-                Respawn();
-            }
+        // if (LifeState == LifeState.Dead)
+        // {
+        //     if (timeSinceDied > 3 && Game.IsServer)
+        //     {
+        //         Respawn();
+        //     }
 
-            return;
-        }
+        //     return;
+        // }
 
         var controller = GetActiveController();
         controller?.Simulate(cl, this, GetActiveAnimator());
