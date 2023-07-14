@@ -73,8 +73,7 @@ public partial class WeaponBase
     public virtual (ModelEntity, string) GetParticleEffectData(string particle)
     {
         ModelEntity effectEntity = this.Parent as MyGame.Player;
-        //string attachment = "hold_L";
-        string attachment = "head";
+        string attachment = "hold_L";
         if (CanSeeViewModel())
         {
             effectEntity = LighterModel;
@@ -128,6 +127,8 @@ public partial class WeaponBase
         if (effectModel == null) return;
 
         var isViewModel = IsLocalPawn && IsFirstPersonMode;
+        // Don't render flame in world/3rd person until I figure out what's wrong with it
+        if (!isViewModel && particleName == ParticleFire) return;
         (ModelEntity effectEntity, string attachment) = GetParticleEffectData(particleName);
         var particle = Particles.Create(particleName, effectEntity, attachment);
         var scale = isViewModel ? vmScale : wmScale;
